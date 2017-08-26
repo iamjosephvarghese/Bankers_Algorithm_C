@@ -1,102 +1,138 @@
 #include<stdio.h>
-int max[20][20],avail[20],need[20][20],allo[20][20];
-int work[20];
-int finish[20];
-int m,n,i,j,flag=1;
+#include<stdlib.h>
+
+int AV[10] , M[10][10] , AL[10][10] , N[10][10] , W[10] , F[10] , R[10] , m , n , i , j , k;
+
+void oneD(int A[10])
+{
+        for(i=0 ; i<m ; i++)
+        {
+                scanf("%d" , &A[i]);
+        }
+}
+
+void twoD(int A[10][10])
+{
+        for(i=0 ; i<n ; i++)
+        {
+                for(j=0 ; j<m ; j++)
+                {
+                        scanf("%d" , &A[i][j]);
+                }
+        }
+}
 
 void main()
 {
-          printf("Enter the number of processes:");
-          scanf("%d",&n);
-          printf("Enter the number of resources");
-          scanf("%d",&m);
+        int s , rc , W[10] , F[10] , flag , c=0 , less;
 
-          printf("Enter availbale resources:\n");
+        printf("\nEnter the number of processes: ");
+        scanf("%d" , &n);
+        printf("\nEnter the number of resource types: ");
+        scanf("%d" , &m);
+        printf("\nEnter the Maximum Allocation Matrix: \n");
+        twoD(M);
+        printf("\nEnter the Allocation Matrix: \n");
+        twoD(AL);
+        printf("\nEnter the Available Vector: \n");
+        oneD(AV);
 
-          for(j=0;j<m;j++)
-          {
-                  printf("Available of resource type %d",j+1);
-                  scanf("%d",&avail[j]);
-                  work[j] = avail[j];
+        for(i=0 ; i<n ; i++)
+        {
+                for(j=0 ; j<m ; j++)
+                {
+                        N[i][j] = M[i][j] - AL[i][j];
+                }
+        }
 
-          }
+        for(i=0 ; i<n ; i++)
+        {
+                F[i] = 0;
+        }
 
-          for(i=0;i<n;i++)
-          {
-                  finish[i] = 0;
+        for(i=0 ; i<m ; i++)
+        {
+                W[i] = AV[i];
+        }
 
-                  for(j=0;j<m;j++)
-                  {
+	i=0;
+        printf("\nPID\tALLOC\tMAX\tNEED\tAVAIL\n");
+	printf("P%d\t" , i);
+	for(i=0 ; i<m ; i++)
+	{
+		printf("%d " , AL[0][i]);
+	}
+	printf("\t");
+	for(i=0 ; i<m ; i++)
+	{
+		printf("%d " , M[0][i]);
+	}
+	printf("\t");
+	for(i=0 ; i<m ; i++)
+	{
+		printf("%d " , N[0][i]);
+	}
+	printf("\t");
+	for(i=0 ; i<m ; i++)
+	{
+		printf("%d " , AV[i]);
+	}
+	printf("\t\n");
+        for(i=1 ; i<n ; i++)
+        {
+		printf("P%d\t" , i);
+		for(j=0 ; j<m ; j++)
+		{
+			printf("%d " , AL[i][j]);
+		}
+		printf("\t");
+		for(j=0 ; j<m ; j++)
+		{
+			printf("%d " , M[i][j]);
+		}
+		printf("\t");
+		for(j=0 ; j<m ; j++)
+		{
+			printf("%d " , N[i][j]);
+		}
+		printf("\t\n");
+        }
+	printf("\nSequence: \n");
+        while(c < n)
+        {
+                flag = 0;
+                for(i=0 ; i<n ; i++)
+                {
+                        less = 1;
+                        for(k=0 ; k<m ; k++)
+                        {
+                                if(N[i][k] > W[k])
+                                {
+                                        less = 0;
+                                        break;
+                                }
+                        }
+                        if((F[i] == 0) && (less == 1))
+                        {
+                                flag = 1;
+                                c++;
+                                F[i] = 1;
+                                printf("P%d " , i);
+                                for(j=0 ; j<m ; j++)
+                                {
+                                        W[j] += AL[i][j];
+                                }
+                                break;
+                        }
+                }
+                if(flag == 0)
+                {
+                        break;
+                }
+        }
 
-
-                          printf("Enter Process %d's Resource %d requirement:",i+1,j+1);
-                          scanf("%d",&max[i][j]);
-                          printf("Enter Process %d's Resource %d allocation:",i+1,j+1);
-                          scanf("%d",&allo[i][j]);
-
-                          need[i][j] = max[i][j] - allo[i][j];
-                          printf("\ndone %d %d",i,j);
-                  }
-  printf("\noutside inner for\n");
-          }
-
-  printf("\noutside read!\n");
-
-
-
-
-          //for(i=0;i<n;i++)
-          while(i<n){
-                  i=0;
-                  //int need_sum = 0;
-
-                  //for(j=0;j<m;j++)
-                  //{
-                  //      need_sum += need[i][j];
-                  //}
-
-                  printf("\ndo started\n");
-                  int inner_flag = 1;
-
-                  for(j=0;j<m;j++)
-                  {
-                          if(need[i][j] > work[j])
-                          {
-                                  break;
-                                  inner_flag = 0;
-                          }
-                  }
-
-                  if(inner_flag == 0)
-                  {
-                          break;
-                  }
-
-                  if(finish[i] == 0)
-                  {
-                          work[j] += allo[j];
-                          finish[i] = 1;
-
-                  }
-                  if(i<n-1)
-                  {
-                          i++;
-                  }
-
-         }
-
-          for(i=0;i<n;i++)
-          {
-                  if(finish[i] != 1)
-                  {
-                          printf("NOT SAFE!");
-                          flag = 0;
-                          break;
-                  }
-          }
-
-          if(flag == 1)
-          {
-                 printf("SAFE!");
-         }
- }
+        if(c == n)
+		printf("\nThe system is in a safe state!\n\n");
+        else
+                printf("\nThe system is in an unsafe state!\n\n");
+}
