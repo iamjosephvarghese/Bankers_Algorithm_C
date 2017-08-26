@@ -3,7 +3,7 @@
 
 int AV[10] , M[10][10] , AL[10][10] , N[10][10] , W[10] , F[10] , R[10] , m , n , i , j , k;
 
-void oneD(int A[10])
+void oneDimesion(int A[10])
 {
         for(i=0 ; i<m ; i++)
         {
@@ -11,7 +11,7 @@ void oneD(int A[10])
         }
 }
 
-void twoD(int A[10][10])
+void twoDimension(int A[10][10])
 {
         for(i=0 ; i<n ; i++)
         {
@@ -26,16 +26,16 @@ void main()
 {
         int s , rc , W[10] , F[10] , flag , c=0 , less;
 
-        printf("\nEnter the number of processes: ");
+        printf("\nEnternumber of processes: ");
         scanf("%d" , &n);
-        printf("\nEnter the number of resource types: ");
+        printf("\nEnternumber of resource types: ");
         scanf("%d" , &m);
         printf("\nEnter the Maximum Allocation Matrix: \n");
-        twoD(M);
+        twoDimension(M);
         printf("\nEnter the Allocation Matrix: \n");
-        twoD(AL);
+        twoDimension(AL);
         printf("\nEnter the Available Vector: \n");
-        oneD(AV);
+        oneDimension(AV);
 
         for(i=0 ; i<n ; i++)
         {
